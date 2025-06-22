@@ -36,10 +36,13 @@ worker:
 
 # Rate limiting configuration
 rate_limit:
-  global_limit: 100            # Global requests per second limit
+  redis_addr: "localhost:6379"
+  redis_password: ""
+  redis_db: 0
+  key_prefix: "taskqueue:ratelimit"
+  limit: 100                   # Global requests per second limit
+  window: 1s                   # Rate limit window
   burst_size: 150              # Burst capacity
-  window_size: 1s              # Rate limit window
-  redis_key_prefix: "taskqueue:ratelimit"
 
 # Task execution configuration
 execution:
