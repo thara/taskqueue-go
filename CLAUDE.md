@@ -96,3 +96,58 @@ internal/
 - Time window distribution prevents API overload
 - Redis is a single point of failure - ensure high availability
 - Message queue handles persistence and retries
+
+## Current Implementation Status & TODO
+
+### ✅ Completed Components
+- Core data models (Task, Job, User) with comprehensive types
+- Task registry with YAML configuration loading (`internal/storage/registry.go`)
+- Redis-based user preference storage with indexing (`internal/storage/user_store.go`)
+- Task definitions configuration (`config/tasks.yaml` with 10 sample tasks)
+- Build system (Makefile) with proper Go tooling
+- Comprehensive documentation (architecture, data models, development guide, operations)
+
+### ❌ Missing Critical Components (TODO)
+1. **Scheduler Service** (`cmd/scheduler/` is empty)
+   - Main service entry point
+   - Interval checking logic
+   - Task triggering mechanism
+   - Redis-based leader election
+
+2. **Worker Service** (`cmd/worker/` is empty)
+   - Main service entry point
+   - Worker pool management
+   - Job execution logic
+   - Health check endpoints
+
+3. **Task Distributor** (`internal/distributor/` is empty)
+   - Time window distribution algorithm
+   - User slot assignment
+   - Queue message creation
+
+4. **Rate Limiter** (`internal/ratelimit/` is empty)
+   - Redis-based token bucket implementation
+   - Global rate limiting logic
+   - Lua scripts for atomic operations
+
+5. **Queue Integration** (`internal/queue/` is empty)
+   - Message queue client adapter
+   - Job pushing/pulling logic
+   - Dead letter queue handling
+
+6. **Service Configurations**
+   - `config/scheduler.yaml` - Scheduler service configuration
+   - `config/worker.yaml` - Worker service configuration
+
+7. **Docker Setup**
+   - `docker-compose.yml` - Local development environment
+   - `build/scheduler.Dockerfile` - Scheduler container
+   - `build/worker.Dockerfile` - Worker container
+
+### 🔧 Implementation Priority
+1. Message queue integration (foundation for other services)
+2. Rate limiter (shared by scheduler and worker)
+3. Task distributor (needed by scheduler)
+4. Scheduler service (core orchestration)
+5. Worker service (task execution)
+6. Configuration files and Docker setup
