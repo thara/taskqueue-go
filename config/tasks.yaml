@@ -1,0 +1,184 @@
+tasks:
+  # Daily Reports
+  - id: daily_user_report
+    name: "Daily User Activity Report"
+    description: "Generates daily activity reports for users"
+    interval:
+      type: daily
+      value: 1
+      timezone: UTC
+      at_time:
+        hour: 6
+        minute: 0
+    timeout: 10m
+    retries: 3
+    config:
+      endpoint: "https://api.example.com/reports/user-activity"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: Bearer ${API_TOKEN}
+      max_duration: 8m
+
+  - id: daily_system_metrics
+    name: "Daily System Metrics"
+    description: "Collects and processes daily system metrics"
+    interval:
+      type: daily
+      value: 1
+      timezone: UTC
+      at_time:
+        hour: 7
+        minute: 30
+    timeout: 15m
+    retries: 2
+    config:
+      endpoint: "https://api.example.com/metrics/daily"
+      method: POST
+      headers:
+        Content-Type: application/json
+      max_duration: 12m
+
+  # Hourly Tasks
+  - id: hourly_data_sync
+    name: "Hourly Data Synchronization"
+    description: "Syncs user data with external systems every hour"
+    interval:
+      type: hourly
+      value: 1
+      timezone: UTC
+    timeout: 5m
+    retries: 3
+    config:
+      endpoint: "https://api.example.com/sync/data"
+      method: GET
+      headers:
+        Accept: application/json
+      max_duration: 4m
+
+  - id: hourly_cache_refresh
+    name: "Cache Refresh"
+    description: "Refreshes application cache every 2 hours"
+    interval:
+      type: hourly
+      value: 2
+      timezone: UTC
+    timeout: 3m
+    retries: 1
+    config:
+      endpoint: "https://api.example.com/cache/refresh"
+      method: POST
+      max_duration: 2m
+
+  # Weekly Tasks
+  - id: weekly_backup
+    name: "Weekly Data Backup"
+    description: "Creates weekly backup of user data"
+    interval:
+      type: weekly
+      value: 1
+      timezone: UTC
+      at_time:
+        hour: 2
+        minute: 0
+    timeout: 60m
+    retries: 2
+    config:
+      endpoint: "https://api.example.com/backup/weekly"
+      method: POST
+      headers:
+        Content-Type: application/json
+      max_duration: 50m
+
+  - id: weekly_analytics
+    name: "Weekly Analytics Report"
+    description: "Generates comprehensive weekly analytics"
+    interval:
+      type: weekly
+      value: 1
+      timezone: America/New_York
+      at_time:
+        hour: 9
+        minute: 0
+    timeout: 30m
+    retries: 3
+    config:
+      endpoint: "https://api.example.com/analytics/weekly"
+      method: POST
+      headers:
+        Content-Type: application/json
+      max_duration: 25m
+
+  # Monthly Tasks
+  - id: monthly_billing
+    name: "Monthly Billing Process"
+    description: "Processes monthly billing for all users"
+    interval:
+      type: monthly
+      value: 1
+      timezone: UTC
+      at_time:
+        hour: 3
+        minute: 0
+    timeout: 120m
+    retries: 1
+    config:
+      endpoint: "https://api.example.com/billing/monthly"
+      method: POST
+      headers:
+        Content-Type: application/json
+        X-Critical: "true"
+      max_duration: 100m
+
+  - id: monthly_cleanup
+    name: "Monthly Data Cleanup"
+    description: "Cleans up old data and optimizes storage"
+    interval:
+      type: monthly
+      value: 1
+      timezone: UTC
+      at_time:
+        hour: 4
+        minute: 30
+    timeout: 90m
+    retries: 2
+    config:
+      endpoint: "https://api.example.com/cleanup/monthly"
+      method: POST
+      max_duration: 80m
+
+  # Special frequency tasks
+  - id: bi_hourly_health_check
+    name: "Bi-hourly Health Check"
+    description: "Performs system health checks every 2 hours"
+    interval:
+      type: hourly
+      value: 2
+      timezone: UTC
+    timeout: 2m
+    retries: 1
+    config:
+      endpoint: "https://api.example.com/health/check"
+      method: GET
+      headers:
+        Accept: application/json
+      max_duration: 90s
+
+  - id: bi_weekly_report
+    name: "Bi-weekly Summary Report"
+    description: "Generates summary reports every 2 weeks"
+    interval:
+      type: weekly
+      value: 2
+      timezone: UTC
+      at_time:
+        hour: 10
+        minute: 0
+    timeout: 45m
+    retries: 2
+    config:
+      endpoint: "https://api.example.com/reports/bi-weekly"
+      method: POST
+      headers:
+        Content-Type: application/json
+      max_duration: 40m
