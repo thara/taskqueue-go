@@ -11,13 +11,11 @@ import (
 
 // Config represents the configuration for the rate limiter
 type Config struct {
-	RedisAddr     string        `yaml:"redis_addr"`
-	RedisPassword string        `yaml:"redis_password"`
-	RedisDB       int           `yaml:"redis_db"`
-	KeyPrefix     string        `yaml:"key_prefix"`
-	Limit         int           `yaml:"limit"`          // Requests per window
-	Window        time.Duration `yaml:"window"`         // Time window duration
-	BurstSize     int           `yaml:"burst_size"`     // Burst capacity
+	RedisClient *redis.Client
+	KeyPrefix   string        `yaml:"key_prefix"`
+	Limit       int           `yaml:"limit"`          // Requests per window
+	Window      time.Duration `yaml:"window"`         // Time window duration
+	BurstSize   int           `yaml:"burst_size"`     // Burst capacity
 }
 
 // Limiter provides distributed rate limiting using Redis
@@ -30,6 +28,9 @@ type Limiter struct {
 func NewLimiter(config *Config) (*Limiter, error) {
 	if config == nil {
 		return nil, fmt.Errorf("config cannot be nil")
+	}
+	if config.RedisClient == nil {
+		return nil, fmt.Errorf("redis client cannot be nil")
 	}
 
 	// Set defaults
@@ -46,22 +47,8 @@ func NewLimiter(config *Config) (*Limiter, error) {
 		config.BurstSize = config.Limit + 50 // Default burst is limit + 50%
 	}
 
-	client := redis.NewClient(&redis.Options{
-		Addr:     config.RedisAddr,
-		Password: config.RedisPassword,
-		DB:       config.RedisDB,
-	})
-
-	// Test connection
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	
-	if err := client.Ping(ctx).Err(); err != nil {
-		return nil, fmt.Errorf("failed to connect to Redis: %w", err)
-	}
-
 	return &Limiter{
-		client: client,
+		client: config.RedisClient,
 		config: config,
 	}, nil
 }
