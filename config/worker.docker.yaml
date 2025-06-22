@@ -1,0 +1,70 @@
+# Worker Service Configuration for Docker
+# This config uses Docker container networking
+
+server:
+  port: 8090
+  read_timeout: 30s
+  write_timeout: 30s
+  shutdown_timeout: 10s
+
+# Redis configuration for rate limiting and coordination
+redis:
+  addr: "redis:6379"
+  password: ""
+  db: 0
+  max_retries: 3
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+# Message queue configuration
+queue:
+  redis_addr: "redis:6379"
+  redis_password: ""
+  redis_db: 0
+  queue_name: "taskqueue:jobs"
+  max_retries: 3
+  default_visibility: 30s
+  dead_letter_queue: "taskqueue:dlq"
+
+# Worker pool configuration
+worker:
+  pool_size: 3                 # Number of concurrent workers
+  poll_interval: 2s            # Faster polling for demo
+  max_job_timeout: 300s        # Maximum time allowed for job execution
+  retry_delay: 10s             # Shorter delay for demo
+  max_retries: 3               # Maximum retry attempts per job
+
+# Rate limiting configuration
+rate_limit:
+  redis_addr: "redis:6379"
+  redis_password: ""
+  redis_db: 0
+  key_prefix: "taskqueue:ratelimit"
+  limit: 10                    # Global requests per second limit (demo)
+  window: 1s                   # Rate limit window
+  burst_size: 15               # Burst capacity
+
+# Task execution configuration
+execution:
+  timeout: 30s                 # Default task execution timeout
+  retry_backoff: "exponential" # Retry backoff strategy (fixed, exponential)
+  retry_base_delay: 2s         # Base delay for exponential backoff
+  retry_max_delay: 60s         # Maximum delay for exponential backoff
+
+# Logging configuration
+logging:
+  level: "debug"               # More verbose for demo
+  format: "json"
+  output: "stdout"
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  port: 9091
+  path: "/metrics"
+
+# Health check configuration
+health:
+  port: 8092
+  path: "/health"

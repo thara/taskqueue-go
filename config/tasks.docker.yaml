@@ -1,0 +1,97 @@
+# Task definitions for Docker demo
+# Using httpbin mock API for testing
+
+tasks:
+  # Simple GET request task
+  - id: "api_health_check"
+    name: "API Health Check"
+    description: "Check if the API is healthy"
+    interval:
+      type: "hourly"
+      value: 1
+      timezone: "UTC"
+    timeout: 30s
+    retries: 3
+    config:
+      endpoint: "http://mock-api/status/200"
+      method: "GET"
+      headers:
+        Content-Type: "application/json"
+        User-Agent: "TaskQueue-Worker/1.0"
+      max_duration: 25s
+
+  # POST request with delay
+  - id: "api_data_sync"
+    name: "API Data Sync" 
+    description: "Sync data with external API"
+    interval:
+      type: "daily"
+      value: 1
+      timezone: "UTC"
+      at_time:
+        hour: 9
+        minute: 0
+    timeout: 60s
+    retries: 2
+    config:
+      endpoint: "http://mock-api/delay/2"
+      method: "POST"
+      headers:
+        Content-Type: "application/json"
+        Authorization: "Bearer demo-token"
+      max_duration: 55s
+
+  # Test different HTTP status codes
+  - id: "api_error_test"
+    name: "API Error Test"
+    description: "Test API error handling"
+    interval:
+      type: "hourly"
+      value: 2
+      timezone: "UTC"
+    timeout: 30s
+    retries: 1
+    config:
+      endpoint: "http://mock-api/status/500"
+      method: "GET"
+      headers:
+        Content-Type: "application/json"
+      max_duration: 25s
+
+  # Frequent task for rate limiting demo
+  - id: "frequent_ping"
+    name: "Frequent Ping"
+    description: "High frequency ping to test rate limiting"
+    interval:
+      type: "hourly"
+      value: 1
+      timezone: "UTC"
+    timeout: 15s
+    retries: 1
+    config:
+      endpoint: "http://mock-api/uuid"
+      method: "GET"
+      headers:
+        Content-Type: "application/json"
+      max_duration: 10s
+
+  # Weekly reporting task
+  - id: "weekly_report"
+    name: "Weekly Report Generation"
+    description: "Generate weekly reports"
+    interval:
+      type: "weekly"
+      value: 1
+      timezone: "UTC"
+      at_time:
+        hour: 8
+        minute: 30
+    timeout: 120s
+    retries: 2
+    config:
+      endpoint: "http://mock-api/base64/VGFza1F1ZXVlIFdlZWtseSBSZXBvcnQ="
+      method: "GET"
+      headers:
+        Content-Type: "application/json"
+        Report-Type: "weekly"
+      max_duration: 110s

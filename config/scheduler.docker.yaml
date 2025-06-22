@@ -1,0 +1,63 @@
+# Scheduler Service Configuration for Docker
+# This config uses Docker container networking
+
+server:
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
+  shutdown_timeout: 10s
+
+# Redis configuration for coordination and state
+redis:
+  addr: "redis:6379"
+  password: ""
+  db: 0
+  max_retries: 3
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+# Message queue configuration
+queue:
+  redis_addr: "redis:6379"
+  redis_password: ""
+  redis_db: 0
+  queue_name: "taskqueue:jobs"
+  max_retries: 3
+  default_visibility: 30s
+  dead_letter_queue: "taskqueue:dlq"
+
+# Task scheduling configuration
+scheduler:
+  check_interval: 10s          # Faster for demo (normally 60s)
+  batch_size: 100              # Max tasks to process per batch
+  distribution_window: 60s     # Shorter window for demo (normally 300s)
+  leader_election_ttl: 30s     # Leader election lock TTL
+  enable_leader_election: true # Enable leader election for HA
+
+# Rate limiting configuration (for coordination with workers)
+rate_limit:
+  redis_addr: "redis:6379"
+  redis_password: ""
+  redis_db: 0
+  key_prefix: "taskqueue:ratelimit"
+  limit: 10                    # Lower limit for demo (normally 100)
+  window: 1s                   # Rate limit window
+  burst_size: 15               # Burst capacity
+
+# Logging configuration
+logging:
+  level: "debug"               # More verbose for demo
+  format: "json"
+  output: "stdout"
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  port: 9090
+  path: "/metrics"
+
+# Health check configuration
+health:
+  port: 8081
+  path: "/health"
