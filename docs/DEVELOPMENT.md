@@ -470,22 +470,26 @@ result, _ := executeTask(task) // Bad!
 ### Logging
 
 ```go
-// Use structured logging
-import "github.com/rs/zerolog/log"
+// Use structured logging with slog
+import "log/slog"
 
-log.Info().
-    Str("task_id", task.ID).
-    Str("user_id", job.UserID).
-    Dur("duration", duration).
-    Msg("Task executed successfully")
+slog.Info("Task executed successfully",
+    "task_id", task.ID,
+    "user_id", job.UserID,
+    "duration", duration,
+)
 
 // Add request ID for tracing
-ctx := context.WithValue(ctx, "request_id", uuid.New().String())
+logger := slog.With("request_id", uuid.New().String())
 
-log.Ctx(ctx).Error().
-    Err(err).
-    Str("task_id", task.ID).
-    Msg("Task execution failed")
+logger.Error("Task execution failed",
+    "error", err,
+    "task_id", task.ID,
+)
+
+// Use context-aware logging
+ctx := context.WithValue(ctx, "logger", logger)
+logger = ctx.Value("logger").(*slog.Logger)
 ```
 
 ### Testing

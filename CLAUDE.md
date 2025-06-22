@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Distributed job scheduler and executor system in Go that manages ~300 static task types across multiple users. The system uses Redis for coordination, a custom message queue (github.com/thara/message-queue-go) for job distribution, and implements global rate limiting across distributed workers.
+Distributed job scheduler and executor system in Go that manages ~300 static task types across multiple users. The system uses Redis for coordination, a custom message queue (github.com/thara/message-queue-go) for job distribution, and implements global rate limiting across distributed workers. Uses Go's standard slog package for structured logging.
 
 ## Key Commands
 
