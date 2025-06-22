@@ -1,0 +1,66 @@
+# Worker Service Configuration
+
+server:
+  port: 8090
+  read_timeout: 30s
+  write_timeout: 30s
+  shutdown_timeout: 10s
+
+# Redis configuration for rate limiting and coordination
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  max_retries: 3
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+# Message queue configuration
+queue:
+  redis_addr: "localhost:6379"
+  redis_password: ""
+  redis_db: 0
+  queue_name: "taskqueue:jobs"
+  max_retries: 3
+  default_visibility: 30s
+  dead_letter_queue: "taskqueue:dlq"
+
+# Worker pool configuration
+worker:
+  pool_size: 10                # Number of concurrent workers
+  poll_interval: 1s            # How often to poll for new jobs
+  max_job_timeout: 300s        # Maximum time allowed for job execution
+  retry_delay: 30s             # Delay before retrying failed jobs
+  max_retries: 3               # Maximum retry attempts per job
+
+# Rate limiting configuration
+rate_limit:
+  global_limit: 100            # Global requests per second limit
+  burst_size: 150              # Burst capacity
+  window_size: 1s              # Rate limit window
+  redis_key_prefix: "taskqueue:ratelimit"
+
+# Task execution configuration
+execution:
+  timeout: 60s                 # Default task execution timeout
+  retry_backoff: "exponential" # Retry backoff strategy (fixed, exponential)
+  retry_base_delay: 1s         # Base delay for exponential backoff
+  retry_max_delay: 300s        # Maximum delay for exponential backoff
+
+# Logging configuration
+logging:
+  level: "info"
+  format: "json"
+  output: "stdout"
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  port: 9091
+  path: "/metrics"
+
+# Health check configuration
+health:
+  port: 8092
+  path: "/health"

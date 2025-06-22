@@ -1,0 +1,52 @@
+# Scheduler Service Configuration
+
+server:
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
+  shutdown_timeout: 10s
+
+# Redis configuration for coordination and state
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  max_retries: 3
+  dial_timeout: 5s
+  read_timeout: 3s
+  write_timeout: 3s
+
+# Message queue configuration
+queue:
+  redis_addr: "localhost:6379"
+  redis_password: ""
+  redis_db: 0
+  queue_name: "taskqueue:jobs"
+  max_retries: 3
+  default_visibility: 30s
+  dead_letter_queue: "taskqueue:dlq"
+
+# Task scheduling configuration
+scheduler:
+  check_interval: 60s          # How often to check for tasks to schedule
+  batch_size: 100              # Max tasks to process per batch
+  distribution_window: 300s    # Time window for distributing tasks (5 minutes)
+  leader_election_ttl: 30s     # Leader election lock TTL
+  enable_leader_election: true # Enable leader election for HA
+
+# Logging configuration
+logging:
+  level: "info"
+  format: "json"
+  output: "stdout"
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  port: 9090
+  path: "/metrics"
+
+# Health check configuration
+health:
+  port: 8081
+  path: "/health"
